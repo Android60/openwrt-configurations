@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This script is executed by cron every minute
+
 # Set vars
 piholeDNS='192.168.0.30'
 backupDNS='192.168.100.1'
@@ -7,7 +9,7 @@ testDomain='www.google.com'
 currentDNS="$(uci show dhcp.cfg01411c.server)"
 
 
-
+# Check if PiHole DNS is used already
 if [[ "$currentDNS" == *"$piholeDNS"* ]]; then
   echo "Current DNS is PiHole"
   if nslookup $testDomain $piholeDNS ; then
