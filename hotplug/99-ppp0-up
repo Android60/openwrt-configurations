@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This script is placed at /etc/hotplug.d/iface/99-ppp0-up
+# and triggered when ppp0 changes state
 if [ "${ACTION}" == "ifup" ] && [ "${DEVICE}" = "ppp0" ]; then
   ip route del 192.168.100.0/24 dev eth0.2
   ip route add 192.168.100.0/24 via 10.5.10.7 dev ppp0 proto static metric 32766
