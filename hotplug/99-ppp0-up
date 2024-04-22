@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ "${ACTION}" == "ifup" ] && [ "${DEVICE}" = "ppp0" ]; then
+  ip route del 192.168.100.0/24 dev eth0.2
+  ip route add 192.168.100.0/24 via 10.5.10.7 dev ppp0 proto static metric 32766
+elif [ "${ACTION}" == "ifdown" ]; then
+  logger -t hotplug.iface.ppp0 PPP0 is down, switching to backupDNS
+  uci del dhcp.cfg01411c.server
+  uci add_list dhcp.cfg01411c.server='/server/192.168.0.1'
+  uci add_list dhcp.cfg01411c.server='/lan/192.168.0.1'
+  uci add_list dhcp.cfg01411c.server='/local/192.168.0.1'
+  uci add_list dhcp.cfg01411c.server='192.168.100.1'
+  uci commit dhcp
+  service dnsmasq restart
+fi
